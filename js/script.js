@@ -1,6 +1,6 @@
 // global variables for html elements
 
-const guessedLetters = document.querySelector(".guessed-letters");
+const displayGuessedLetters = document.querySelector(".guessed-letters");
 const guessButton = document.querySelector(".guess");
 const letter = document.querySelector(".letter");
 const wordInProgress = document.querySelector(".word-in-progress");
@@ -10,6 +10,7 @@ const message = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
 
 const word = "magnolia";
+const guessedLetters = [];
 
 // funtion to update the word displayed on the screen
 
@@ -29,7 +30,52 @@ updateWordInProgress(word);
 
 guessButton.addEventListener("click", function(e) {
     e.preventDefault();
+    message.innerText = "";
     const userGuessedThisLetter = letter.value;
+    let validatedLetter = validate(userGuessedThisLetter);
+    if (validatedLetter != undefined) {
+        makeGuess(validatedLetter);
+    }
     letter.value = "";
-    console.log(userGuessedThisLetter);
+    //console.log(validatedLetter);
 });
+
+// function to validate player's input and display a meesage if input isn't valid. 
+//(called by guessButton click)
+
+const validate = function(input) {
+    const acceptedLetter = /[a-zA-Z]/;
+    if (input === "") {
+        message.innerText = "Please guess a letter.";
+        //console.log("blank");
+    } 
+    else if (input.length !== 1 ) {
+        message.innerText = "Please guess a single letter.";
+        //console.log("more than one letter");
+    }
+    else if (input.match(acceptedLetter)) {
+        //input is ok to call next function
+        return input;
+        //console.log("good input");
+    }
+    else {
+        message.innerText = "Please input a letter from A-Z.";
+        //console.log("not a letter");
+    }
+};
+
+//function to capture the user's input
+
+const makeGuess = function(letter) {
+    letter = letter.toUpperCase();
+    let check = guessedLetters.includes(letter);
+    //console.log(check);
+    if (check == true) {
+        message.innerText = "You have already guessed that letter.  Please try a different one."
+    }
+    else {
+        guessedLetters.push(letter);
+    }
+    console.log(guessedLetters);
+
+};
