@@ -10,8 +10,9 @@ const message = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
 
 let word = "magnolia";
-const guessedLetters = [];
-let remainingGuesses = 8;
+let guessedLetters = [];
+const guessesConstant = 8; // Change this variable to change the number of guesses a player gets
+let remainingGuesses = guessesConstant;
 
 // async function to get data and choose word
 // (called below and playAgainButton)
@@ -23,7 +24,7 @@ const getWord = async function () {
     const wordArray = data.split("\n");
     const randomIndex = Math.floor(Math.random() * wordArray.length);
     word = wordArray[randomIndex];
-    console.log(word);
+    //console.log(word);
     word = word.trim();
     startWord(word)
 };
@@ -154,6 +155,7 @@ const guessesCounter = function (guess) {
         else {
             message.innerText = `Game over.  The word was ${word}.`;
             remainingSpan.innerText = "0 guesses";
+            startOver();
         }
     }
     else {
@@ -169,6 +171,32 @@ const winner = function(checkWord) {
     if (checkWord === wordUpper) {
         message.classList.add("win");
         message.innerHTML = `<p class="highlight">You guessed the correct word!  Congrats!</p>`;
+        startOver();
     }
 };
 
+// function to start the game over 
+// (called by winner and the else statement from guessesCounter)
+
+const startOver = function() {
+    guessButton.classList.add("hide");
+    remaining.classList.add("hide");
+    displayGuessedLetters.classList.add("hide");
+    playAgainButton.classList.remove("hide");
+};
+
+
+// Event listener for the playAgainButton
+
+playAgainButton.addEventListener("click", function() {
+    guessButton.classList.remove("hide");
+    remaining.classList.remove("hide");
+    displayGuessedLetters.classList.remove("hide");
+    playAgainButton.classList.add("hide");
+    message.innerText = "";
+    guessedLetters = [];
+    displayGuessedLetters.innerText = "";
+    remainingGuesses = guessesConstant;
+    remainingSpan.innerText = `${remainingGuesses} guesses`;
+    getWord();
+});
