@@ -198,5 +198,6 @@ playAgainButton.addEventListener("click", function() {
     displayGuessedLetters.innerText = "";
     remainingGuesses = guessesConstant;
     remainingSpan.innerText = `${remainingGuesses} guesses`;
+    message.classList.remove("win");
     getWord();
 });
