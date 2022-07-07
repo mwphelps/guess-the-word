@@ -14,7 +14,7 @@ const guessedLetters = [];
 
 // funtion to update the word displayed on the screen
 
-const updateWordInProgress = function(word) {
+const getWord = function(word) {
     word.split('');
     const displayWord = [];
     for (let letter of word) {
@@ -24,7 +24,7 @@ const updateWordInProgress = function(word) {
     wordInProgress.innerText = displayWord.join('');
 };
 
-updateWordInProgress(word);
+getWord(word);
 
 // guess button event listener
 
@@ -65,6 +65,7 @@ const validate = function(input) {
 };
 
 //function to capture the user's input
+//(called by guessButton click)
 
 const makeGuess = function(letter) {
     letter = letter.toUpperCase();
@@ -75,7 +76,54 @@ const makeGuess = function(letter) {
     }
     else {
         guessedLetters.push(letter);
+        showGuessedLetters();
+        updateWordInProgress(guessedLetters);
     }
     console.log(guessedLetters);
 
+};
+
+// function to show the guessed letters on the screen
+// (called by makeGuess else statement)
+
+const showGuessedLetters = function () {
+    displayGuessedLetters.innerText = "";
+    for (let letter of guessedLetters) {
+        let li = document.createElement("li");
+        li.innerText = letter;
+        displayGuessedLetters.append(li);
+    }
+};
+
+// function for update displayed word on page
+// (called by makeGuess else statement)
+
+const updateWordInProgress = function (guessedLetters) {
+    const wordUpper = word.toUpperCase();
+    const wordArray = wordUpper.split("");
+    const progressWord = [];
+    for (let letter of wordUpper) {
+        let getLetter = "●";
+        for (let checkLetter of guessedLetters) {
+            if (letter === checkLetter) {
+                getLetter = checkLetter;
+            }
+        }
+        progressWord.push(getLetter);
+    }
+    //console.log(progressWord);
+    const checkWord = progressWord.join("");
+    wordInProgress.innerText = checkWord;
+    winner(checkWord);
+};
+
+// function to check if user as won game
+ //(called by updateWordInProgress)
+
+const winner = function(checkWord) {
+    const wordUpper = word.toUpperCase();
+    if (checkWord === wordUpper) {
+        message.classList.add("win");
+        message.innerHTML = `<p class="highlight">You guessed the correct word!  Congrats!</p>`;
+    }
 };
